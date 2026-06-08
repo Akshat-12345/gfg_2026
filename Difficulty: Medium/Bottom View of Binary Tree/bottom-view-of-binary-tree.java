@@ -14,41 +14,52 @@ class Node {
 */
 
 class Solution {
-    class pair{
-        int data;
-        int level;
-        public pair(int data, int level){
-            this.data = data;
-            this.level = level;
+    static class Pair {
+        int dist;
+        Node val;
+        
+        Pair(int dist, Node val) {
+            this.dist = dist;
+            this.val = val;
         }
     }
-    
-    Map<Integer,pair> map = new TreeMap<>();
-    
-    public ArrayList<Integer> bottomView(Node root) {
-        // code here
-        solve(root,0,0);
+
+
+    public ArrayList<Integer> bottomView(Node root){
+        ArrayList<Integer> l = new ArrayList<>();
+        if (root == null) {
+            return l;
+        }
+
+        TreeMap<Integer, Integer> mp = new TreeMap<>();
+
+        Queue<Pair> q = new LinkedList<Pair>();
         
-        ArrayList<Integer> arr = new ArrayList<>();
-        for(int key : map.keySet()){
-            arr.add(map.get(key).data);
+        q.add(new Pair(0, root));
+        
+        while (!q.isEmpty()) {
+            int n = q.size();
+            for (int i = 0; i < n; i++) {
+                Pair curr = q.remove();
+                int currDist = curr.dist;
+                Node currNode = curr.val;
+                
+                
+                mp.put(currDist, currNode.data);
+                
+                if (currNode.left != null) {
+                    q.add(new Pair(currDist - 1, currNode.left));
+                }
+                if (currNode.right != null) {
+                    q.add(new Pair(currDist + 1, currNode.right));
+                }
+            }
         }
         
-        return arr;
-        
-    }
-    
-    public void solve(Node root, int idx, int level){
-        if (root == null){
-            return;
+        for (Map.Entry<Integer, Integer> entry : mp.entrySet()) {
+            l.add(entry.getValue());
         }
         
-        solve(root.left, idx - 1, level + 1);
-        solve(root.right, idx + 1, level + 1);
-        
-        if(!map.containsKey(idx) || map.get(idx).level <= level){
-            map.put(idx , new pair(root.data,level));
-        }
-        
+        return l;
     }
 }
