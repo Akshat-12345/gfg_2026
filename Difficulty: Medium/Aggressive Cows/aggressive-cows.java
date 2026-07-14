@@ -1,5 +1,36 @@
 class Solution {
-    public boolean possible(int mid , int [] stalls, int k){
+    public int aggressiveCows(int[] arr, int k) {
+        // code here
+        int s = 1;
+        int min = 0;
+        int max = 0;
+        int n = arr.length;
+        Arrays.sort(arr);
+        
+        for(int i = 0 ; i < n ; i++){
+            min= Math.min(min,arr[i]);
+            max = Math.max(max,arr[i]);
+        }
+        
+        int e = max - min;
+        
+        int ans = 0;
+        
+        while(s <= e){
+            int m = s + (e - s)/2;
+            
+            if(isPossible(arr, k , m)){
+                ans = m;
+                s = m + 1;
+            }else{
+                e = m - 1;
+            }
+        }
+        
+        return ans;
+    }
+    
+     public boolean isPossible( int [] stalls, int k , int mid ){
         int n = stalls.length;
         int count = 1;
         int lastPos = stalls[0];
@@ -16,26 +47,5 @@ class Solution {
         }
         
         return false;
-    }
-    
-    public int aggressiveCows(int[] stalls, int k) {
-        // code here
-        int n = stalls.length;
-        Arrays.sort(stalls);
-        int ans = 0;
-        int start = 1;
-        int end = stalls[n-1] - stalls[0];
-        
-        while(start <= end){
-            int mid = (start + end)/2;
-            
-            if(possible(mid,stalls,k)){
-                ans = mid;
-                start = mid + 1;
-            }else{
-                end = mid - 1;
-            }
-        }
-        return ans;
     }
 }
